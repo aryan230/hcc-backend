@@ -16,7 +16,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 // ** MIDDLEWARE ** //
-const whitelist = ["http://localhost:3000", "http://localhost:8080"];
+const whitelist = [
+  "http://localhost:3000",
+  "http://localhost:8080",
+  "https://thehonestcareerco.in",
+];
 const corsOptions = {
   origin: function (origin, callback) {
     console.log("** Origin of request " + origin);
