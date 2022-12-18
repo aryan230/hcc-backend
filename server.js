@@ -20,7 +20,7 @@ const whitelist = [
   "http://localhost:3000",
   "http://localhost:8080",
   "https://thehonestcareerco.in",
-  "https://beta.thehonestcareerco.in/",
+  "https://beta.thehonestcareerco.in",
 ];
 const corsOptions = {
   origin: function (origin, callback) {
