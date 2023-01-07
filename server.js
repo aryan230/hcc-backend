@@ -20,7 +20,7 @@ dotenv.config();
 connectDB();
 const app = express();
 
-// app.use(cors());
+app.use(cors());
 app.use(express.json());
 // ** MIDDLEWARE **
 const whitelist = [
@@ -29,19 +29,19 @@ const whitelist = [
   "https://thehonestcareerco.in",
   "https://beta.thehonestcareerco.in",
 ];
-const corsOptions = {
-  origin: function (origin, callback) {
-    console.log("** Origin of request " + origin);
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      console.log("Origin acceptable");
-      callback(null, true);
-    } else {
-      console.log("Origin rejected");
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
-app.use(cors(corsOptions));
+// const corsOptions = {
+//   origin: function (origin, callback) {
+//     console.log("** Origin of request " + origin);
+//     if (whitelist.indexOf(origin) !== -1 || !origin) {
+//       console.log("Origin acceptable");
+//       callback(null, true);
+//     } else {
+//       console.log("Origin rejected");
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+// };
+// app.use(cors(corsOptions));
 
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
