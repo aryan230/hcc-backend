@@ -11,6 +11,11 @@ const userSchema = mongoose.Schema(
       unique: true,
       required: true,
     },
+    type: {
+      type: String,
+      default: "local",
+      required: true,
+    },
     password: {
       type: String,
       required: false,

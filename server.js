@@ -9,10 +9,17 @@ import cors from "cors";
 import path from "path";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import Razorpay from "razorpay";
+import Stripe from "stripe";
+import passport from "passport";
+import cookieSession from "cookie-session";
 
+const stripe = new Stripe(
+  "sk_test_51MHPaRSGajuPx50dAJ7Y0JCA3PhfRiaMhWCpRUUKlCtos4sNQwsoU6vUfmmvgu3rZjed8Um8LgJl2JezunYyIvev009DR0aSRg"
+);
 dotenv.config();
 connectDB();
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 // ** MIDDLEWARE ** //
@@ -40,6 +47,33 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/delivery", deliveryAdressRoutes);
+
+app.get("/api/config/stripe", (req, res) => {
+  res.send({
+    publishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+  });
+});
+
+app.post("/api/create-payment-intent", async (req, res) => {
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: 2000,
+      currency: "inr",
+      automatic_payment_methods: {
+        enabled: true,
+      },
+    });
+
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  } catch (error) {
+    return res.status(400).send({
+      message: error.message,
+    });
+  }
+});
+
 app.get("/api/config/razorpay", (req, res) =>
   res.send(process.env.RAZORPAY_KEY_ID)
 );

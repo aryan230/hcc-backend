@@ -1,6 +1,6 @@
 const courses = [
   {
-    name: "Application Process",
+    name: "Univerity Admission",
     image:
       "https://i.ibb.co/fdh55sX/bombay-mix-chanachur-chiwda-farsan-is-indian-snack-mix-popular-tea-time-food-from-india-min-removebg.png",
     description:

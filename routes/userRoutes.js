@@ -5,6 +5,7 @@ import {
   getUserByID,
   getUserProfile,
   getUsers,
+  googleAuth,
   registerUser,
   updateUser,
   updateUserProfile,
@@ -12,6 +13,7 @@ import {
 import { admin, protect } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
+router.post("/google", googleAuth);
 router.post("/login", authUser);
 router.route("/").post(registerUser).get(protect, admin, getUsers);
 router
