@@ -25,6 +25,23 @@ const addOrderItems = asyncHandler(async (req, res) => {
   }
 });
 
+const updateOrderAdress = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  const { number, address, city, state, postalCode } = req.body;
+  if (order) {
+    order.shippingAdress.number = number;
+    order.shippingAdress.address = address;
+    order.shippingAdress.city = city;
+    order.shippingAdress.state = state;
+    order.shippingAdress.postalCode = postalCode;
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+});
+
 const getOrderById = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id).populate(
     "user",
@@ -65,4 +82,28 @@ const getMyOrders = asyncHandler(async (req, res) => {
   res.json(orders);
 });
 
-export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders };
+const getOrders = asyncHandler(async (req, res) => {
+  const orders = await Order.find({}).populate("user", "id name email");
+  res.json(orders);
+});
+
+const deleteOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (order) {
+    await order.remove();
+    res.json({ message: "Order deleted sucessfully" });
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+});
+
+export {
+  addOrderItems,
+  getOrderById,
+  updateOrderToPaid,
+  updateOrderAdress,
+  getMyOrders,
+  getOrders,
+  deleteOrder,
+};

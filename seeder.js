@@ -5,23 +5,26 @@ import courses from "./data/Courses.js";
 import User from "./models/userModel.js";
 import Course from "./models/courseModel.js";
 import connectDB from "./config/db.js";
+import Coupons from "./models/coupons.js";
+import coupons from "./data/coupons.js";
 
 dotenv.config();
 connectDB();
 
 const importData = async () => {
   try {
-    await Course.deleteMany();
-    await User.deleteMany();
+    const createdCoupons = await Coupons.insertMany(coupons);
+    // await Course.deleteMany();
+    // await User.deleteMany();
 
-    const createdUsers = await User.insertMany(users);
-    const adminUser = createdUsers[0]._id;
+    // const createdUsers = await User.insertMany(users);
+    // const adminUser = createdUsers[0]._id;
 
-    const sampleCourses = courses.map((course) => {
-      return { ...course, user: adminUser };
-    });
+    // const sampleCourses = courses.map((course) => {
+    //   return { ...course, user: adminUser };
+    // });
 
-    await Course.insertMany(sampleCourses);
+    // await Course.insertMany(sampleCourses);
     console.log("Data Imported");
     process.exit();
   } catch (error) {
@@ -32,9 +35,11 @@ const importData = async () => {
 
 const destroyData = async () => {
   try {
-    await Course.deleteMany();
-    await User.deleteMany();
-
+    await Coupons.deleteMany();
+    // await Course.deleteMany();
+    // await User.deleteMany();
+    // await Order.deleteMany();
+    // await Delivery.deleteMany();
     console.log("Data Deleted");
     process.exit();
   } catch (error) {

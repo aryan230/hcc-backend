@@ -7,6 +7,23 @@ const orderSchema = mongoose.Schema(
       required: false,
       ref: "User",
     },
+    shippingAdress: {
+      number: {
+        type: Number,
+      },
+      address: {
+        type: String,
+      },
+      city: {
+        type: String,
+      },
+      state: {
+        type: String,
+      },
+      postalCode: {
+        type: Number,
+      },
+    },
     orderCourse: [
       {
         name: {

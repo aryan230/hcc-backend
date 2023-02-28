@@ -12,6 +12,8 @@ import Razorpay from "razorpay";
 import Stripe from "stripe";
 import passport from "passport";
 import cookieSession from "cookie-session";
+import sgMail from "@sendgrid/mail";
+import couponRoutes from "./routes/couponsRoutes.js";
 
 const stripe = new Stripe(
   "sk_test_51MHPaRSGajuPx50dAJ7Y0JCA3PhfRiaMhWCpRUUKlCtos4sNQwsoU6vUfmmvgu3rZjed8Um8LgJl2JezunYyIvev009DR0aSRg"
@@ -19,7 +21,7 @@ const stripe = new Stripe(
 dotenv.config();
 connectDB();
 const app = express();
-
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 app.use(cors());
 app.use(express.json());
 // ** MIDDLEWARE **
@@ -47,6 +49,31 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/delivery", deliveryAdressRoutes);
+app.use("/api/coupons", couponRoutes);
+app.get("/api/sendEmail", (req, res) => {
+  const msg = {
+    to: "gabru2306@gmail.com", // Change to your recipient
+    from: "aryan@thehonestcareerco.in",
+    dynamic_template_data: {
+      name: "Aryan",
+      id: "123",
+    },
+    // Change to your verified sender
+    subject: "Sending with SendGrid is Fun",
+    template_id: "d-5888185181df49bd8485dc6cdfebbd87",
+    text: "and easy to do anywhere, even with Node.js",
+    html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+  };
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+      res.send("Message sent");
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+});
 
 app.get("/api/config/stripe", (req, res) => {
   res.send({
@@ -55,9 +82,10 @@ app.get("/api/config/stripe", (req, res) => {
 });
 
 app.post("/api/create-payment-intent", async (req, res) => {
+  const { amount } = req.body;
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 2000,
+      amount: amount * 100,
       currency: "inr",
       automatic_payment_methods: {
         enabled: true,
